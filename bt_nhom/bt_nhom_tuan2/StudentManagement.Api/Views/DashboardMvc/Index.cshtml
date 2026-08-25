@@ -1,0 +1,223 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Dashboard";
+}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Dashboard - Thống kê Sinh viên</h2>
+  <a href="/SinhVienMvc/Index" class="btn btn-secondary">← Quay lại Quản lý SV</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card text-bg-info h-100">
+      <div class="card-body text-center">
+        <div class="fs-3 fw-bold">@ViewBag.Total</div>
+        <div class="small text-uppercase">Tổng số sinh viên</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-bg-secondary h-100">
+      <div class="card-body text-center">
+        <div class="fs-3 fw-bold">@ViewBag.TotalClass</div>
+        <div class="small text-uppercase">Số lớp</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-bg-success h-100">
+      <div class="card-body text-center">
+        <div class="fs-3 fw-bold">@((ViewBag.AvgScore as double?)?.ToString("F2").Replace('.', ',') ?? "-")</div>
+        <div class="small text-uppercase">Điểm TB toàn trường</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-bg-warning h-100">
+      <div class="card-body text-center">
+        <div class="fs-5 fw-bold text-primary">Nam: @ViewBag.PctMale%</div>
+        <div class="fs-5 fw-bold text-danger">Nữ: @ViewBag.PctFemale%</div>
+        <div class="small text-uppercase mt-1">Tỷ lệ Nam/Nữ</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Sĩ số, ĐTB theo lớp</h5>
+          <select id="sortClassBy" class="form-select form-select-sm w-auto">
+            <option value="class">Sắp xếp theo Lớp</option>
+            <option value="count">Sắp xếp theo Sĩ số</option>
+            <option value="max-desc">Điểm cao nhất (Giảm dần)</option>
+            <option value="max-asc">Điểm cao nhất (Tăng dần)</option>
+            <option value="min-desc">Điểm thấp nhất (Giảm dần)</option>
+            <option value="min-asc">Điểm thấp nhất (Tăng dần)</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered table-striped table-hover mb-0" id="classTable">
+          <thead class="table-light">
+            <tr>
+              <th>Lớp</th>
+              <th>Sĩ số</th>
+              <th>ĐTB cao nhất</th>
+              <th>ĐTB thấp nhất</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach(var row in (IEnumerable<dynamic>)(ViewBag.ByClass ?? new List<dynamic>())){
+            <tr>
+              <td class="class-name">@(row.Contains("_id") ? row["_id"] : "")</td>
+              <td class="class-count">@(row.Contains("Siso") ? row["Siso"] : "")</td>
+              @{
+                  double maxVal = 0;
+                  double minVal = 0;
+                  string maxStr = "";
+                  string minStr = "";
+                  if (row.Contains("MaxDTB") && row["MaxDTB"] != null && row["MaxDTB"].IsNumeric)
+                  {
+                      maxVal = Math.Round(row["MaxDTB"].ToDouble(), 2);
+                      maxStr = maxVal.ToString("F2").Replace('.', ',');
+                  }
+                  if (row.Contains("MinDTB") && row["MinDTB"] != null && row["MinDTB"].IsNumeric)
+                  {
+                      minVal = Math.Round(row["MinDTB"].ToDouble(), 2);
+                      minStr = minVal.ToString("F2").Replace('.', ',');
+                  }
+              }
+              <td class="class-max" data-value="@maxVal">@maxStr</td>
+              <td class="class-min" data-value="@minVal">@minStr</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header bg-info text-white">
+        <h5 class="mb-0">Ngoại ngữ phổ biến</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered table-striped table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Ngoại ngữ</th>
+              <th>Số SV</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach(var l in (IEnumerable<dynamic>)(ViewBag.PopularLang ?? new List<dynamic>())){
+            <tr>
+              <td>@(l.Contains("_id") ? l["_id"] : "")</td>
+              <td>@(l.Contains("count") ? l["count"] : "")</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-3">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Top 5 sinh viên điểm TB cao nhất</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered table-striped table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Mã SV</th>
+              <th>Họ tên</th>
+              <th>Lớp</th>
+              <th>Điểm TB</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach(var s in (IEnumerable<dynamic>)(ViewBag.Top5 ?? new List<dynamic>())){
+            <tr>
+              <td>@(s.Contains("masv") ? s["masv"] : "")</td>
+              <td>@(s.Contains("hoten") ? s["hoten"] : "")</td>
+              <td>@(s.Contains("malop") ? s["malop"] : "")</td>
+              <td>@(
+              s.Contains("scoreAvg") && s["scoreAvg"] != null && s["scoreAvg"].IsNumeric
+                  ? Convert.ToDouble(s["scoreAvg"]).ToString("F2").Replace('.', ',')
+                  : "-"
+              )</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0">Phân loại học lực</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered table-striped table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Học lực</th>
+              <th>Số SV</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach(var r in (IEnumerable<dynamic>)(ViewBag.RankStat ?? new List<dynamic>())){
+            <tr>
+              <td>@(r.Contains("_id") ? r["_id"] : "")</td>
+              <td>@(r.Contains("SoLuong") ? r["SoLuong"] : "")</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const sortSelect = document.getElementById('sortClassBy');
+  const tableBody = document.querySelector('#classTable tbody');
+  
+  sortSelect.addEventListener('change', function() {
+    const sortBy = this.value;
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    
+    rows.sort((a, b) => {
+      switch(sortBy) {
+        case 'class':
+          return a.querySelector('.class-name').textContent.localeCompare(b.querySelector('.class-name').textContent);
+        case 'count':
+          return parseInt(b.querySelector('.class-count').textContent) - parseInt(a.querySelector('.class-count').textContent);
+        case 'max-desc':
+          return parseFloat(b.querySelector('.class-max').dataset.value) - parseFloat(a.querySelector('.class-max').dataset.value);
+        case 'max-asc':
+          return parseFloat(a.querySelector('.class-max').dataset.value) - parseFloat(b.querySelector('.class-max').dataset.value);
+        case 'min-desc':
+          return parseFloat(b.querySelector('.class-min').dataset.value) - parseFloat(a.querySelector('.class-min').dataset.value);
+        case 'min-asc':
+          return parseFloat(a.querySelector('.class-min').dataset.value) - parseFloat(b.querySelector('.class-min').dataset.value);
+        default:
+          return 0;
+      }
+    });
+    
+    rows.forEach(row => tableBody.appendChild(row));
+  });
+});
+</script>
