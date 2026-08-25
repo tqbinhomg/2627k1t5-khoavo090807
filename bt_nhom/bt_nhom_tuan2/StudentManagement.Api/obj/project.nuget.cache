@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "dgSpecHash": "7lbpYx18EiY=",
+  "success": true,
+  "projectFilePath": "E:\\monhoc\\nosql\\bt_nhom_tuan2\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan2\\StudentManagement.Api\\StudentManagement.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\as\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.11\\microsoft.aspnetcore.openapi.10.0.11.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\microsoft.extensions.apidescription.server\\10.0.0\\microsoft.extensions.apidescription.server.10.0.0.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\microsoft.openapi\\2.7.5\\microsoft.openapi.2.7.5.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\mongodb.bson\\3.11.0\\mongodb.bson.3.11.0.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\mongodb.driver\\3.11.0\\mongodb.driver.3.11.0.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\sharpcompress\\0.48.1\\sharpcompress.0.48.1.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\snappier\\1.3.1\\snappier.1.3.1.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\swashbuckle.aspnetcore\\10.2.3\\swashbuckle.aspnetcore.10.2.3.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\10.2.3\\swashbuckle.aspnetcore.swagger.10.2.3.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\10.2.3\\swashbuckle.aspnetcore.swaggergen.10.2.3.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\10.2.3\\swashbuckle.aspnetcore.swaggerui.10.2.3.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\zstdsharp.port\\0.7.3\\zstdsharp.port.0.7.3.nupkg.sha512"
+  ],
+  "logs": []
+}

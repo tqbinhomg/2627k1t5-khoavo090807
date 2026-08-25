@@ -1,0 +1,513 @@
+[{
+  "_id": {
+    "$oid": "6a89b7454706fdbf5de6a382"
+  },
+  "masv": "sv002",
+  "hoten": "Trần Thị Bích",
+  "tuoi": 21,
+  "phai": "Nữ",
+  "malop": "l01",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Pháp"
+  ],
+  "monhoc": [
+    {
+      "mamon": "csdl",
+      "tenmon": "Cơ sở dữ liệu",
+      "diem": 9
+    },
+    {
+      "mamon": "mangmaytinh",
+      "tenmon": "Mạng máy tính",
+      "diem": 8
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a89b7454706fdbf5de6a383"
+  },
+  "masv": "sv003",
+  "hoten": "Lê Hoàng Cường",
+  "tuoi": 20,
+  "phai": "Nam",
+  "malop": "l02",
+  "ngoaingu": [
+    "Tiếng Anh"
+  ],
+  "monhoc": [
+    {
+      "mamon": "laptrinh",
+      "tenmon": "Lập trình Cơ bản",
+      "diem": 6.5
+    },
+    {
+      "mamon": "cautrucdulieu",
+      "tenmon": "Cấu trúc dữ liệu",
+      "diem": 7.5
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a89b7454706fdbf5de6a384"
+  },
+  "masv": "sv004",
+  "hoten": "Phạm Minh Dung",
+  "tuoi": 22,
+  "phai": "Nữ",
+  "malop": "l02",
+  "ngoaingu": [
+    "Tiếng Nhật",
+    "Tiếng Trung"
+  ],
+  "monhoc": [
+    {
+      "mamon": "thietkeweb",
+      "tenmon": "Thiết kế Web",
+      "diem": 8.8
+    },
+    {
+      "mamon": "csdl",
+      "tenmon": "Cơ sở dữ liệu",
+      "diem": 8.2
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a89b7454706fdbf5de6a385"
+  },
+  "masv": "sv005",
+  "hoten": "Hoàng Văn Đức",
+  "tuoi": 19,
+  "phai": "Nam",
+  "malop": "l01",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Đức"
+  ],
+  "monhoc": [
+    {
+      "mamon": "toanroirac",
+      "tenmon": "Toán rời rạc",
+      "diem": 5.5
+    },
+    {
+      "mamon": "laptrinh",
+      "tenmon": "Lập trình Cơ bản",
+      "diem": 8
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a89b7454706fdbf5de6a386"
+  },
+  "masv": "sv006",
+  "hoten": "Vũ Thu Giang",
+  "tuoi": 20,
+  "phai": "Nữ",
+  "malop": "l03",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Hàn"
+  ],
+  "monhoc": [
+    {
+      "mamon": "trituenhantao",
+      "tenmon": "Trí tuệ nhân tạo",
+      "diem": 9.2
+    },
+    {
+      "mamon": "cautrucdulieu",
+      "tenmon": "Cấu trúc dữ liệu",
+      "diem": 8.7
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a89b7454706fdbf5de6a387"
+  },
+  "masv": "sv007",
+  "hoten": "Đặng Quốc Hải",
+  "tuoi": 21,
+  "phai": "Nam",
+  "malop": "l02",
+  "ngoaingu": [
+    "Tiếng Anh"
+  ],
+  "monhoc": [
+    {
+      "mamon": "hetdieuhanh",
+      "tenmon": "Hệ điều hành",
+      "diem": 7
+    },
+    {
+      "mamon": "mangmaytinh",
+      "tenmon": "Mạng máy tính",
+      "diem": 6.8
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a89b7454706fdbf5de6a388"
+  },
+  "masv": "sv008",
+  "hoten": "Bùi Mai Hương",
+  "tuoi": 20,
+  "phai": "Nữ",
+  "malop": "l03",
+  "ngoaingu": [
+    "Tiếng Nhật"
+  ],
+  "monhoc": [
+    {
+      "mamon": "csdl",
+      "tenmon": "Cơ sở dữ liệu",
+      "diem": 6
+    },
+    {
+      "mamon": "thietkeweb",
+      "tenmon": "Thiết kế Web",
+      "diem": 9.5
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a89b7454706fdbf5de6a389"
+  },
+  "masv": "sv009",
+  "hoten": "Ngô Tuấn Kiệt",
+  "tuoi": 22,
+  "phai": "Nam",
+  "malop": "l01",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Trung"
+  ],
+  "monhoc": [
+    {
+      "mamon": "laptrinh",
+      "tenmon": "Lập trình Cơ bản",
+      "diem": 8.5
+    },
+    {
+      "mamon": "trituenhantao",
+      "tenmon": "Trí tuệ nhân tạo",
+      "diem": 7.8
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a89b7454706fdbf5de6a38a"
+  },
+  "masv": "sv010",
+  "hoten": "Đỗ Phương Linh",
+  "tuoi": 19,
+  "phai": "Nữ",
+  "malop": "l03",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Pháp"
+  ],
+  "monhoc": [
+    {
+      "mamon": "toanroirac",
+      "tenmon": "Toán rời rạc",
+      "diem": 8
+    },
+    {
+      "mamon": "hetdieuhanh",
+      "tenmon": "Hệ điều hành",
+      "diem": 8.4
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a89b7454706fdbf5de6a38b"
+  },
+  "masv": "sv011",
+  "hoten": "Dương Văn Nam",
+  "tuoi": 21,
+  "phai": "Nam",
+  "malop": "l02",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Hàn"
+  ],
+  "monhoc": [
+    {
+      "mamon": "cautrucdulieu",
+      "tenmon": "Cấu trúc dữ liệu",
+      "diem": 9.5
+    },
+    {
+      "mamon": "csdl",
+      "tenmon": "Cơ sở dữ liệu",
+      "diem": 7.2
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8cb6e91502903ab6d152ce"
+  },
+  "masv": "sv012",
+  "hoten": "Nguyễn Hoàng Oanh",
+  "tuoi": 20,
+  "phai": "Nữ",
+  "malop": "l01",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Đức"
+  ],
+  "monhoc": [
+    {
+      "mamon": "csdl",
+      "tenmon": "Cơ sở dữ liệu",
+      "diem": 8
+    },
+    {
+      "mamon": "laptrinh",
+      "tenmon": "Lập trình Cơ bản",
+      "diem": 9.5
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8cb6e91502903ab6d152cf"
+  },
+  "masv": "sv013",
+  "hoten": "Phan Minh Phúc",
+  "tuoi": 21,
+  "phai": "Nam",
+  "malop": "l02",
+  "ngoaingu": [
+    "Tiếng Nhật"
+  ],
+  "monhoc": [
+    {
+      "mamon": "mangmaytinh",
+      "tenmon": "Mạng máy tính",
+      "diem": 7.5
+    },
+    {
+      "mamon": "hetdieuhanh",
+      "tenmon": "Hệ điều hành",
+      "diem": 8.1
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8cb6e91502903ab6d152d0"
+  },
+  "masv": "sv014",
+  "hoten": "Võ Thị Quỳnh",
+  "tuoi": 19,
+  "phai": "Nữ",
+  "malop": "l03",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Trung"
+  ],
+  "monhoc": [
+    {
+      "mamon": "thietkeweb",
+      "tenmon": "Thiết kế Web",
+      "diem": 9
+    },
+    {
+      "mamon": "cautrucdulieu",
+      "tenmon": "Cấu trúc dữ liệu",
+      "diem": 6.8
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8cb6e91502903ab6d152d1"
+  },
+  "masv": "sv015",
+  "hoten": "Lê Tấn Sơn",
+  "tuoi": 22,
+  "phai": "Nam",
+  "malop": "l01",
+  "ngoaingu": [
+    "Tiếng Hàn"
+  ],
+  "monhoc": [
+    {
+      "mamon": "trituenhantao",
+      "tenmon": "Trí tuệ nhân tạo",
+      "diem": 8.4
+    },
+    {
+      "mamon": "toanroirac",
+      "tenmon": "Toán rời rạc",
+      "diem": 7.2
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8cb6e91502903ab6d152d2"
+  },
+  "masv": "sv016",
+  "hoten": "Trịnh Phương Tâm",
+  "tuoi": 20,
+  "phai": "Nữ",
+  "malop": "l02",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Pháp"
+  ],
+  "monhoc": [
+    {
+      "mamon": "csdl",
+      "tenmon": "Cơ sở dữ liệu",
+      "diem": 7.8
+    },
+    {
+      "mamon": "mangmaytinh",
+      "tenmon": "Mạng máy tính",
+      "diem": 8.6
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8cb6e91502903ab6d152d3"
+  },
+  "masv": "sv017",
+  "hoten": "Đoàn Anh Tuấn",
+  "tuoi": 21,
+  "phai": "Nam",
+  "malop": "l03",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Nhật"
+  ],
+  "monhoc": [
+    {
+      "mamon": "laptrinh",
+      "tenmon": "Lập trình Cơ bản",
+      "diem": 6
+    },
+    {
+      "mamon": "hetdieuhanh",
+      "tenmon": "Hệ điều hành",
+      "diem": 7.5
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8cb6e91502903ab6d152d4"
+  },
+  "masv": "sv018",
+  "hoten": "Lương Khánh Uyên",
+  "tuoi": 19,
+  "phai": "Nữ",
+  "malop": "l01",
+  "ngoaingu": [
+    "Tiếng Trung"
+  ],
+  "monhoc": [
+    {
+      "mamon": "thietkeweb",
+      "tenmon": "Thiết kế Web",
+      "diem": 8.5
+    },
+    {
+      "mamon": "toanroirac",
+      "tenmon": "Toán rời rạc",
+      "diem": 9.1
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8cb6e91502903ab6d152d5"
+  },
+  "masv": "sv019",
+  "hoten": "Hồ Thái Vinh",
+  "tuoi": 22,
+  "phai": "Nam",
+  "malop": "l022",
+  "ngoaingu": [
+    "Tiếng Anh",
+    "Tiếng Hàn"
+  ],
+  "monhoc": [
+    {
+      "mamon": "cautrucdulieu",
+      "tenmon": "Cấu trúc dữ liệu",
+      "diem": 8.2
+    },
+    {
+      "mamon": "trituenhantao",
+      "tenmon": "Trí tuệ nhân tạo",
+      "diem": 9
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8cb6e91502903ab6d152d6"
+  },
+  "masv": "sv020",
+  "hoten": "Cao Như Xuân",
+  "tuoi": 20,
+  "phai": "Nữ",
+  "malop": "l03",
+  "ngoaingu": [
+    "Tiếng Anh"
+  ],
+  "monhoc": [
+    {
+      "mamon": "csdl",
+      "tenmon": "Cơ sở dữ liệu",
+      "diem": 6.9
+    },
+    {
+      "mamon": "laptrinh",
+      "tenmon": "Lập trình Cơ bản",
+      "diem": 8.33
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6a8cb6e91502903ab6d152d7"
+  },
+  "masv": "sv021",
+  "hoten": "Đặng Bảo Yến",
+  "tuoi": 21,
+  "phai": "Nữ",
+  "malop": "l01",
+  "ngoaingu": [
+    "Tiếng Nhật",
+    "Tiếng Pháp"
+  ],
+  "monhoc": [
+    {
+      "mamon": "mangmaytinh",
+      "tenmon": "Mạng máy tính",
+      "diem": 9.4
+    },
+    {
+      "mamon": "hetdieuhanh",
+      "tenmon": "Hệ điều hành",
+      "diem": 8.8
+    }
+  ]
+}]
