@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "dgSpecHash": "E2FocOitIiA=",
+  "success": true,
+  "projectFilePath": "E:\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan4\\bt_tuan4\\bt_tuan4.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\as\\.nuget\\packages\\cassandracsharpdriver\\3.22.1\\cassandracsharpdriver.3.22.1.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\k4os.compression.lz4\\1.1.11\\k4os.compression.lz4.1.1.11.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.12\\microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\microsoft.openapi\\2.12.0\\microsoft.openapi.2.12.0.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\newtonsoft.json\\9.0.1\\newtonsoft.json.9.0.1.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\system.codedom\\4.7.0\\system.codedom.4.7.0.nupkg.sha512",
+    "C:\\Users\\as\\.nuget\\packages\\system.management\\4.7.0\\system.management.4.7.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'Newtonsoft.Json' 9.0.1 has a known high severity vulnerability, https://github.com/advisories/GHSA-5crp-9r3c-p9vr",
+      "projectPath": "E:\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan4\\bt_tuan4\\bt_tuan4.csproj",
+      "warningLevel": 1,
+      "filePath": "E:\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan4\\bt_tuan4\\bt_tuan4.csproj",
+      "libraryId": "Newtonsoft.Json",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}

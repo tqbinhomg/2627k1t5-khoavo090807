@@ -1,0 +1,264 @@
+@page
+@model bt_tuan4.Pages.HotelDetailsModel
+@{
+    ViewData["Title"] = "Quản lý khách sạn";
+}
+
+<div class="page-head mb-3">
+    <h1>Quản lý khách sạn</h1>
+    <p class="text-muted mb-0">Xem, thêm, sửa, xóa thông tin khách sạn.</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-1"></i>@Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-1"></i>@Model.SuccessMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="search-card p-3 p-md-4 mb-4">
+    <form method="post" asp-page-handler="Search">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-8">
+                <label class="form-label">Mã khách sạn</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                    <input type="text" name="hotelId" class="form-control" value="@Model.HotelId" placeholder="VD: HTL001">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-brand w-100"><i class="bi bi-search me-1"></i>Xem chi tiết</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Model.Hotel != null)
+{
+    <div class="panel-card overflow-hidden mb-4 border-primary">
+        <div class="px-4 py-3 border-bottom bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2 class="h5 mb-1 text-primary"><i class="bi bi-building me-2"></i>@Model.Hotel.HotelName</h2>
+                <div class="text-warning small">
+                    @if (Model.Hotel.StarRating.HasValue)
+                    { @for (int i = 0; i < Model.Hotel.StarRating.Value; i++) { <i class="bi bi-star-fill"></i> } }
+                    else { <span class="text-muted">Chưa xếp hạng</span> }
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-outline-primary" onclick="openEdit(@System.Text.Json.JsonSerializer.Serialize(Model.Hotel))">
+                    <i class="bi bi-pencil me-1"></i>Sửa
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('@Model.Hotel.HotelId', '@Model.Hotel.HotelName')">
+                    <i class="bi bi-trash me-1"></i>Xóa
+                </button>
+            </div>
+        </div>
+        <div class="p-4 info-grid">
+            <div class="row g-3">
+                <div class="col-md-6"><div class="info-label">Mã</div><div class="info-value"><code>@Model.Hotel.HotelId</code></div></div>
+                <div class="col-md-6"><div class="info-label">Thành phố</div><div class="info-value">@Model.Hotel.City</div></div>
+                <div class="col-md-6"><div class="info-label">Điện thoại</div><div class="info-value">@Model.Hotel.Phone</div></div>
+                <div class="col-12"><div class="info-label">Địa chỉ</div><div class="info-value">@Model.Hotel.Address</div></div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Rooms != null && Model.Rooms.Count > 0)
+    {
+        <div class="panel-card mb-4">
+            <div class="px-4 py-3 border-bottom bg-white d-flex justify-content-between align-items-center">
+                <h3 class="h6 mb-0"><i class="bi bi-door-closed me-2"></i>Phòng của @Model.Hotel.HotelName</h3>
+                <span class="badge text-bg-light border">@Model.Rooms.Count phòng</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead><tr><th>Số phòng</th><th>Loại</th><th class="text-end">Giá/đêm</th><th class="text-center">Trạng thái</th></tr></thead>
+                    <tbody>
+                        @foreach (var room in Model.Rooms)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@room.RoomNumber</td>
+                                <td><span class="badge text-bg-light border">@room.RoomType</span></td>
+                                <td class="text-end">@room.PricePerNight.ToString("N0")</td>
+                                <td class="text-center">
+                                    @switch (room.Status)
+                                    {
+                                        case "AVAILABLE": <span class="badge text-bg-success">Có sẵn</span> break;
+                                        case "OCCUPIED": <span class="badge text-bg-danger">Đã đặt</span> break;
+                                        default: <span class="badge text-bg-warning">Bảo trì</span> break;
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+
+<div class="panel-card mb-4">
+    <div class="px-4 py-3 border-bottom bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h2 class="h5 mb-0"><i class="bi bi-buildings me-2"></i>Danh sách khách sạn</h2>
+        <div class="d-flex gap-2 align-items-center">
+            <span class="badge text-bg-light border">@(Model.AllHotels?.Count ?? 0) khách sạn</span>
+            <button class="btn btn-sm btn-success" onclick="openAdd()"><i class="bi bi-plus-lg me-1"></i>Thêm mới</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr><th>Mã</th><th>Tên</th><th>Thành phố</th><th>Địa chỉ</th><th class="text-center">Sao</th><th>Điện thoại</th><th class="text-center">Thao tác</th></tr>
+            </thead>
+            <tbody>
+                @if (Model.AllHotels != null && Model.AllHotels.Count > 0)
+                {
+                    @foreach (var hotel in Model.AllHotels)
+                    {
+                        <tr>
+                            <td><code>@hotel.HotelId</code></td>
+                            <td>@hotel.HotelName</td>
+                            <td>@hotel.City</td>
+                            <td>@hotel.Address</td>
+                            <td class="text-center text-warning">
+                                @if (hotel.StarRating.HasValue) { @for (int i = 0; i < hotel.StarRating.Value; i++) { <i class="bi bi-star-fill small"></i> } }
+                                else { <span class="text-muted">-</span> }
+                            </td>
+                            <td>@hotel.Phone</td>
+                            <td class="text-center">
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <a href="/HotelDetails?hotelId=@hotel.HotelId" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="openEdit(@System.Text.Json.JsonSerializer.Serialize(hotel))"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('@hotel.HotelId', '@hotel.HotelName')"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="7" class="text-center text-muted py-4">Chưa có dữ liệu.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Thêm/Sửa -->
+<div class="modal fade" id="hotelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form method="post" asp-page-handler="Save">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="hotelModalTitle">Thêm khách sạn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage) && Model.ActiveModal == "hotelModal")
+                    {
+                        <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>@Model.ErrorMessage</div>
+                    }
+                    <input type="hidden" name="IsEditing" id="isHotelEditing" value="@Model.IsEditing.ToString().ToLowerInvariant()">
+                    <input type="hidden" name="OriginalHotelId" id="originalHotelId" value="@Model.OriginalHotelId">
+                    <div class="mb-3">
+                        <label class="form-label">Mã khách sạn <span class="text-danger">*</span></label>
+                        <input type="text" name="FormHotel.HotelId" id="fHotelId" class="form-control" value="@Model.FormHotel.HotelId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tên khách sạn</label>
+                        <input type="text" name="FormHotel.HotelName" id="fHotelName" class="form-control" value="@Model.FormHotel.HotelName">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Thành phố</label>
+                        <input type="text" name="FormHotel.City" id="fCity" class="form-control" value="@Model.FormHotel.City">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ</label>
+                        <input type="text" name="FormHotel.Address" id="fAddress" class="form-control" value="@Model.FormHotel.Address">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Xếp hạng sao</label>
+                        <input type="number" name="FormHotel.StarRating" id="fStarRating" class="form-control" value="@Model.FormHotel.StarRating" min="1" max="5">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Điện thoại</label>
+                        <input type="text" name="FormHotel.Phone" id="fPhone" class="form-control" value="@Model.FormHotel.Phone">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <form method="post" asp-page-handler="Delete">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Xóa khách sạn <strong id="deleteHotelName"></strong>?
+                    <input type="hidden" name="hotelId" id="deleteHotelId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function openAdd() {
+    document.getElementById('hotelModalTitle').textContent = 'Thêm khách sạn';
+    document.getElementById('isHotelEditing').value = 'false';
+    document.getElementById('originalHotelId').value = '';
+    ['fHotelId','fHotelName','fCity','fAddress','fStarRating','fPhone'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fHotelId').readOnly = false;
+    new bootstrap.Modal(document.getElementById('hotelModal')).show();
+}
+function openEdit(h) {
+    document.getElementById('hotelModalTitle').textContent = 'Sửa khách sạn';
+    document.getElementById('isHotelEditing').value = 'true';
+    document.getElementById('originalHotelId').value = h.HotelId;
+    document.getElementById('fHotelId').value = h.HotelId; document.getElementById('fHotelId').readOnly = false;
+    document.getElementById('fHotelName').value = h.HotelName;
+    document.getElementById('fCity').value = h.City;
+    document.getElementById('fAddress').value = h.Address;
+    document.getElementById('fStarRating').value = h.StarRating ?? '';
+    document.getElementById('fPhone').value = h.Phone;
+    new bootstrap.Modal(document.getElementById('hotelModal')).show();
+}
+function confirmDelete(id, name) {
+    document.getElementById('deleteHotelId').value = id;
+    document.getElementById('deleteHotelName').textContent = name;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+@if (Model.ActiveModal == "hotelModal")
+{
+<text>
+document.getElementById('hotelModalTitle').textContent = '@(Model.IsEditing ? "Sửa khách sạn" : "Thêm khách sạn")';
+document.getElementById('fHotelId').readOnly = false;
+new bootstrap.Modal(document.getElementById('hotelModal')).show();
+</text>
+}
+</script>
+}

@@ -1,0 +1,89 @@
+-- Q1: Bảng lưu thông tin chi tiết khách sạn (Partition Key: hotel_id)
+CREATE TABLE IF NOT EXISTS hotels (
+    hotel_id TEXT,
+    hotel_name TEXT,
+    city TEXT,
+    address TEXT,
+    star_rating INT,
+    phone TEXT,
+    PRIMARY KEY (hotel_id)
+);
+
+-- Q2: Bảng danh sách phòng theo khách sạn (Partition Key: hotel_id, Clustering Key: room_number)
+CREATE TABLE IF NOT EXISTS rooms_by_hotel (
+    hotel_id TEXT,
+    room_number INT,
+    room_type TEXT,
+    price_per_night DECIMAL,
+    status TEXT, -- 'AVAILABLE', 'OCCUPIED', 'MAINTENANCE'
+    PRIMARY KEY (hotel_id, room_number)
+);
+
+-- Q3: Bảng lịch sử đặt phòng theo khách hàng (Sắp xếp ngày nhận phòng mới nhất lên đầu)
+CREATE TABLE IF NOT EXISTS bookings_by_guest (
+    guest_id TEXT,
+    check_in_date DATE,
+    booking_id UUID,
+    hotel_id TEXT,
+    hotel_name TEXT,
+    room_number INT,
+    check_out_date DATE,
+    total_amount DECIMAL,
+    status TEXT, -- 'CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT', 'CANCELLED'
+    PRIMARY KEY (guest_id, check_in_date, booking_id)
+) WITH CLUSTERING ORDER BY (check_in_date DESC, booking_id DESC);
+
+-- Q4: Bảng danh sách đặt phòng theo khách sạn và ngày (Phục vụ tra cứu khoảng thời gian)
+CREATE TABLE IF NOT EXISTS bookings_by_hotel_date (
+    hotel_id TEXT,
+    check_in_date DATE,
+    booking_id UUID,
+    guest_id TEXT,
+    guest_name TEXT,
+    room_number INT,
+    check_out_date DATE,
+    total_amount DECIMAL,
+    status TEXT,
+    PRIMARY KEY ((hotel_id), check_in_date, booking_id)
+) WITH CLUSTERING ORDER BY (check_in_date ASC, booking_id ASC);
+
+-- Q5: Bảng tra cứu hoá đơn theo mã đặt phòng
+CREATE TABLE IF NOT EXISTS invoices_by_booking (
+    booking_id UUID,
+    invoice_id UUID,
+    guest_id TEXT,
+    hotel_id TEXT,
+    room_charge DECIMAL,
+    service_charge DECIMAL,
+    tax DECIMAL,
+    total_amount DECIMAL,
+    payment_status TEXT, -- 'UNPAID', 'PAID', 'REFUNDED'
+    issued_at TIMESTAMP,
+    PRIMARY KEY (booking_id, invoice_id)
+);
+
+SELECT * FROM hotels WHERE hotel_id = 'HTL001';
+
+SELECT room_number, room_type, price_per_night, status
+FROM rooms_by_hotel
+WHERE hotel_id = 'HTL001';
+-- Lọc thêm phòng đang trống (cần thêm room_number vào điều kiện
+-- hoặc lọc phía client, vì status không phải Clustering Column):
+SELECT room_number, room_type, price_per_night
+FROM rooms_by_hotel
+WHERE hotel_id = 'HTL001' AND status = 'AVAILABLE' ALLOW FILTERING;
+
+SELECT check_in_date, hotel_name, room_number, check_out_date, total_amount, status
+FROM bookings_by_guest
+WHERE guest_id = 'GUEST001';
+
+SELECT check_in_date, room_number, guest_name, check_out_date, status
+FROM bookings_by_hotel_date
+WHERE hotel_id = 'HTL001'
+AND check_in_date >= '2026-10-01' AND check_in_date <= '2026-10-31';
+
+SELECT * FROM invoices_by_booking
+WHERE booking_id = 3f2504e0-4f89-11d3-9a0c-0305e82c3301;
+
+
+

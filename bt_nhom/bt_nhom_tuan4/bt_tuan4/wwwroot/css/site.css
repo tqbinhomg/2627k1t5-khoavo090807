@@ -1,0 +1,155 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+    --brand: #0f766e;
+    --brand-soft: #ccfbf1;
+    --page-bg: #f4f6f8;
+}
+
+body {
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page-bg);
+    color: #1f2937;
+}
+
+.brand-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    background: var(--brand);
+    color: #fff;
+    font-size: 1rem;
+}
+
+.navbar-brand {
+    color: #111827 !important;
+}
+
+.navbar .nav-link {
+    color: #4b5563;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 0.5rem;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: var(--brand);
+    background: var(--brand-soft);
+}
+
+.hero-panel {
+    background: linear-gradient(135deg, #0f766e 0%, #115e59 55%, #134e4a 100%);
+    color: #fff;
+    border-radius: 1rem;
+    padding: 2rem 1.75rem;
+}
+
+.stat-tile {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.85rem;
+    padding: 1.1rem 1.25rem;
+    height: 100%;
+}
+
+.stat-tile .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.stat-tile .stat-label {
+    color: #6b7280;
+    font-size: 0.85rem;
+}
+
+.stat-tile .stat-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.65rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--brand-soft);
+    color: var(--brand);
+}
+
+.page-head h1 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.search-card,
+.panel-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.85rem;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.hotel-card {
+    height: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.85rem;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.hotel-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.table thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6b7280;
+    font-weight: 600;
+    background: #f9fafb;
+    white-space: nowrap;
+}
+
+.btn-brand {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+}
+
+.btn-brand:hover {
+    background: #0d9488;
+    border-color: #0d9488;
+    color: #fff;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #14b8a6;
+    box-shadow: 0 0 0 0.2rem rgba(15, 118, 110, 0.15);
+}
+
+.info-grid .info-label {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 0.15rem;
+}
+
+.info-grid .info-value {
+    font-weight: 600;
+}
+
+.invoice-total {
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+}
+
+code {
+    font-size: 0.8rem;
+}

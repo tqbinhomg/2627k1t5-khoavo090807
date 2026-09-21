@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · Quản lý khách sạn</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    @{
+        var path = Context.Request.Path.Value ?? "/";
+        bool IsActive(string href) =>
+            href == "/"
+                ? path == "/"
+                : path.StartsWith(href, StringComparison.OrdinalIgnoreCase);
+        string NavClass(string href) => IsActive(href) ? "nav-link active" : "nav-link";
+    }
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <span class="brand-icon"><i class="bi bi-building"></i></span>
+                <span class="fw-semibold">Hotel Admin</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Mở menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-lg-1">
+                    <li class="nav-item">
+                        <a class="@NavClass("/")" href="/"><i class="bi bi-house me-1"></i>Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="@NavClass("/HotelDetails")" href="/HotelDetails"><i class="bi bi-building me-1"></i>Khách sạn</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="@NavClass("/RoomsList")" href="/RoomsList"><i class="bi bi-door-open me-1"></i>Phòng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="@NavClass("/GuestBookings")" href="/GuestBookings"><i class="bi bi-person-lines-fill me-1"></i>Lịch sử</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="@NavClass("/HotelBookingsByDate")" href="/HotelBookingsByDate"><i class="bi bi-calendar-week me-1"></i>Theo ngày</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="@NavClass("/InvoiceLookup")" href="/InvoiceLookup"><i class="bi bi-receipt me-1"></i>Hóa đơn</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow-1 py-4">
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="border-top bg-white py-3 mt-auto">
+        <div class="container text-center text-muted small">
+            © 2026 · Hệ thống quản lý khách sạn
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

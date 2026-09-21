@@ -1,0 +1,266 @@
+@page
+@model bt_tuan4.Pages.HotelBookingsByDateModel
+@{
+    ViewData["Title"] = "Quản lý đặt phòng theo ngày";
+}
+
+<div class="page-head mb-3">
+    <h1>Quản lý đặt phòng theo ngày</h1>
+    <p class="text-muted mb-0">Xem, thêm, sửa, xóa đặt phòng theo khách sạn và ngày.</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle me-1"></i>@Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle me-1"></i>@Model.SuccessMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="search-card p-3 p-md-4 mb-4">
+    <form method="post" asp-page-handler="Search">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Mã khách sạn</label>
+                <input type="text" name="hotelId" class="form-control" value="@Model.HotelId" placeholder="VD: HTL001">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Từ ngày</label>
+                <input type="date" name="startDate" class="form-control" value="@(Model.StartDate == default ? "" : Model.StartDate.ToString("yyyy-MM-dd"))">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Đến ngày</label>
+                <input type="date" name="endDate" class="form-control" value="@(Model.EndDate == default ? "" : Model.EndDate.ToString("yyyy-MM-dd"))">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-brand w-100">Tìm</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Model.Bookings != null && Model.Bookings.Count > 0)
+{
+    <div class="panel-card mb-4 border-primary">
+        <div class="px-4 py-3 border-bottom bg-white d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="h5 mb-0 text-primary"><i class="bi bi-search me-2"></i>Kết quả: <code>@Model.HotelId</code></h2>
+                <span class="small text-muted">@Model.StartDate.ToString("dd/MM/yyyy") – @Model.EndDate.ToString("dd/MM/yyyy")</span>
+            </div>
+            <span class="badge text-bg-primary">@Model.Bookings.Count lượt</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead><tr><th>Nhận phòng</th><th>Trả phòng</th><th>Khách</th><th class="text-center">Phòng</th><th class="text-end">Tổng tiền</th><th class="text-center">Trạng thái</th><th class="text-center">Thao tác</th></tr></thead>
+                <tbody>
+                    @foreach (var b in Model.Bookings)
+                    {
+                        <tr>
+                            <td>@b.CheckInDate.ToString("dd/MM/yyyy")</td>
+                            <td>@b.CheckOutDate.ToString("dd/MM/yyyy")</td>
+                            <td>@b.GuestName</td>
+                            <td class="text-center">@b.RoomNumber</td>
+                            <td class="text-end">@b.TotalAmount.ToString("N0")</td>
+                            <td class="text-center">@StatusBadge(b.Status)</td>
+                            <td class="text-center">
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="openEdit(@System.Text.Json.JsonSerializer.Serialize(b))"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('@b.HotelId','@b.CheckInDate.ToString("yyyy-MM-dd")','@b.BookingId')"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<div class="panel-card mb-4">
+    <div class="px-4 py-3 border-bottom bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h2 class="h5 mb-0"><i class="bi bi-calendar-week me-2"></i>Tất cả đặt phòng</h2>
+        <div class="d-flex gap-2 align-items-center">
+            <span class="badge text-bg-light border">@(Model.AllBookings?.Count ?? 0) lượt</span>
+            <button class="btn btn-sm btn-success" onclick="openAdd()"><i class="bi bi-plus-lg me-1"></i>Thêm mới</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead><tr><th>Khách sạn</th><th>Nhận phòng</th><th>Trả phòng</th><th>Khách</th><th class="text-center">Phòng</th><th class="text-end">Tổng tiền</th><th class="text-center">Trạng thái</th><th class="text-center">Thao tác</th></tr></thead>
+            <tbody>
+                @if (Model.AllBookings != null && Model.AllBookings.Count > 0)
+                {
+                    @foreach (var b in Model.AllBookings)
+                    {
+                        <tr>
+                            <td><code>@b.HotelId</code></td>
+                            <td>@b.CheckInDate.ToString("dd/MM/yyyy")</td>
+                            <td>@b.CheckOutDate.ToString("dd/MM/yyyy")</td>
+                            <td>@b.GuestName</td>
+                            <td class="text-center">@b.RoomNumber</td>
+                            <td class="text-end">@b.TotalAmount.ToString("N0")</td>
+                            <td class="text-center">@StatusBadge(b.Status)</td>
+                            <td class="text-center">
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="openEdit(@System.Text.Json.JsonSerializer.Serialize(b))"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('@b.HotelId','@b.CheckInDate.ToString("yyyy-MM-dd")','@b.BookingId')"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="8" class="text-center text-muted py-4">Chưa có dữ liệu.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@functions {
+    IHtmlContent StatusBadge(string status) => status switch {
+        "CONFIRMED" => new HtmlString("<span class='badge text-bg-primary'>Đã xác nhận</span>"),
+        "CHECKED_IN" => new HtmlString("<span class='badge text-bg-info'>Đã nhận phòng</span>"),
+        "CHECKED_OUT" => new HtmlString("<span class='badge text-bg-success'>Đã trả phòng</span>"),
+        "CANCELLED" => new HtmlString("<span class='badge text-bg-danger'>Đã hủy</span>"),
+        _ => new HtmlString($"<span class='badge text-bg-secondary'>{status}</span>")
+    };
+}
+
+<!-- Modal Thêm/Sửa -->
+<div class="modal fade" id="bookingModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form method="post" asp-page-handler="Save">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookingModalTitle">Thêm đặt phòng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage) && Model.ActiveModal == "bookingModal")
+                    {
+                        <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>@Model.ErrorMessage</div>
+                    }
+                    <input type="hidden" name="FormBooking.BookingId" id="fBookingId" value="@Model.FormBooking.BookingId">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Mã khách sạn <span class="text-danger">*</span></label>
+                            <input type="text" name="FormBooking.HotelId" id="fHotelId" class="form-control" value="@Model.FormBooking.HotelId" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mã khách hàng</label>
+                            <input type="text" name="FormBooking.GuestId" id="fGuestId" class="form-control" value="@Model.FormBooking.GuestId">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tên khách</label>
+                            <input type="text" name="FormBooking.GuestName" id="fGuestName" class="form-control" value="@Model.FormBooking.GuestName">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Số phòng</label>
+                            <input type="number" name="FormBooking.RoomNumber" id="fRoomNumber" class="form-control" value="@Model.FormBooking.RoomNumber">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ngày nhận phòng</label>
+                            <input type="date" name="FormBooking.CheckInDate" id="fCheckIn" class="form-control" value="@(Model.FormBooking.CheckInDate == default ? "" : Model.FormBooking.CheckInDate.ToString("yyyy-MM-dd"))">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ngày trả phòng</label>
+                            <input type="date" name="FormBooking.CheckOutDate" id="fCheckOut" class="form-control" value="@(Model.FormBooking.CheckOutDate == default ? "" : Model.FormBooking.CheckOutDate.ToString("yyyy-MM-dd"))">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tổng tiền</label>
+                            <input type="number" name="FormBooking.TotalAmount" id="fTotal" class="form-control" value="@Model.FormBooking.TotalAmount" step="0.01">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Trạng thái</label>
+                            <select name="FormBooking.Status" id="fStatus" class="form-select">
+                                <option value="CONFIRMED" selected="@(Model.FormBooking.Status == "CONFIRMED" ? "selected" : null)">Đã xác nhận</option>
+                                <option value="CHECKED_IN" selected="@(Model.FormBooking.Status == "CHECKED_IN" ? "selected" : null)">Đã nhận phòng</option>
+                                <option value="CHECKED_OUT" selected="@(Model.FormBooking.Status == "CHECKED_OUT" ? "selected" : null)">Đã trả phòng</option>
+                                <option value="CANCELLED" selected="@(Model.FormBooking.Status == "CANCELLED" ? "selected" : null)">Đã hủy</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <form method="post" asp-page-handler="Delete">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Xóa đặt phòng này?
+                    <input type="hidden" name="hotelId" id="dHotelId">
+                    <input type="hidden" name="checkInDate" id="dCheckIn">
+                    <input type="hidden" name="bookingId" id="dBookingId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function fmt(d) { return d ? d.substring(0,10) : ''; }
+function openAdd() {
+    document.getElementById('bookingModalTitle').textContent = 'Thêm đặt phòng';
+    ['fBookingId','fHotelId','fGuestId','fGuestName','fRoomNumber','fCheckIn','fCheckOut','fTotal'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fHotelId').readOnly = false;
+    document.getElementById('fCheckIn').readOnly = false;
+    document.getElementById('fStatus').value = 'CONFIRMED';
+    new bootstrap.Modal(document.getElementById('bookingModal')).show();
+}
+function openEdit(b) { 
+    document.getElementById('bookingModalTitle').textContent = 'Sửa đặt phòng';
+    document.getElementById('fBookingId').value = b.BookingId;
+    document.getElementById('fHotelId').value = b.HotelId; document.getElementById('fHotelId').readOnly = false;
+    document.getElementById('fGuestId').value = b.GuestId;
+    document.getElementById('fGuestName').value = b.GuestName;
+    document.getElementById('fRoomNumber').value = b.RoomNumber;
+    document.getElementById('fCheckIn').value = fmt(b.CheckInDate); document.getElementById('fCheckIn').readOnly = false;
+    document.getElementById('fCheckOut').value = fmt(b.CheckOutDate);
+    document.getElementById('fTotal').value = b.TotalAmount;
+    document.getElementById('fStatus').value = b.Status;
+    new bootstrap.Modal(document.getElementById('bookingModal')).show();
+}
+function confirmDelete(hotelId, checkIn, bookingId) {
+    document.getElementById('dHotelId').value = hotelId;
+    document.getElementById('dCheckIn').value = checkIn;
+    document.getElementById('dBookingId').value = bookingId;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+@if (Model.ActiveModal == "bookingModal")
+{
+<text>
+document.getElementById('bookingModalTitle').textContent = '@(Model.FormBooking.BookingId == Guid.Empty ? "Thêm đặt phòng" : "Sửa đặt phòng")';
+document.getElementById('fHotelId').readOnly = false;
+document.getElementById('fCheckIn').readOnly = false;
+new bootstrap.Modal(document.getElementById('bookingModal')).show();
+</text>
+}
+</script>
+}

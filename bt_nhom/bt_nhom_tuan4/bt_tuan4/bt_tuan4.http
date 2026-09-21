@@ -1,0 +1,6 @@
+@bt_tuan4_HostAddress = http://localhost:5070
+
+GET {{bt_tuan4_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

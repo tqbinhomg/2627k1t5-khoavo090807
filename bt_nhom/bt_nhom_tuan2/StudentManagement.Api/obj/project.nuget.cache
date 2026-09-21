@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "7lbpYx18EiY=",
+  "dgSpecHash": "QVqRTljXow8=",
   "success": true,
-  "projectFilePath": "E:\\monhoc\\nosql\\bt_nhom_tuan2\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan2\\StudentManagement.Api\\StudentManagement.Api.csproj",
+  "projectFilePath": "E:\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan2\\StudentManagement.Api\\StudentManagement.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\as\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\as\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.11\\microsoft.aspnetcore.openapi.10.0.11.nupkg.sha512",

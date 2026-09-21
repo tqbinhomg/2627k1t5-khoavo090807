@@ -1,0 +1,82 @@
+@page
+@model bt_tuan4.Pages.IndexModel
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<section class="hero-panel mb-4">
+    <div class="row align-items-center g-3">
+        <div class="col-lg-8">
+            <p class="text-white-50 small mb-1">Bảng điều khiển</p>
+            <h1 class="h3 mb-2">Quản lý khách sạn</h1>
+            <p class="mb-0 opacity-75">Xem khách sạn, phòng, đặt phòng và hóa đơn trên một giao diện gọn.</p>
+        </div>
+        <div class="col-lg-4 d-flex flex-wrap gap-2 justify-content-lg-end">
+            <a href="/HotelDetails" class="btn btn-light btn-sm"><i class="bi bi-search me-1"></i>Tra cứu khách sạn</a>
+            <a href="/RoomsList" class="btn btn-outline-light btn-sm"><i class="bi bi-door-open me-1"></i>Xem phòng</a>
+        </div>
+    </div>
+</section>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-1"></i>@Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+    </div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="stat-tile d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-value">@Model.AllHotels?.Count </div>
+                <div class="stat-label">Khách sạn</div>
+            </div>
+            <div class="stat-icon"><i class="bi bi-buildings"></i></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-tile d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-value">@Model.AllRooms?.Count </div>
+                <div class="stat-label">Phòng</div>
+            </div>
+            <div class="stat-icon"><i class="bi bi-door-closed"></i></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-tile d-flex justify-content-between align-items-center">
+            <div>
+                <div class="stat-value">
+                    @{
+                        var rated = Model.AllHotels?.Where(h => h.StarRating.HasValue).ToList();
+                        var avg = (rated != null && rated.Count > 0)
+                            ? Math.Round((decimal)rated.Sum(h => h.StarRating!.Value) / rated.Count, 1)
+                            : 0;
+                    }
+                    @avg
+                </div>
+                <div class="stat-label">Đánh giá TB</div>
+            </div>
+            <div class="stat-icon"><i class="bi bi-star-fill"></i></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-tile d-flex justify-content-between align-items-center">
+            <div><div class="stat-value">@(Model.AllHotelBookings?.Count ?? 0)</div><div class="stat-label">Lượt đặt phòng</div></div>
+            <div class="stat-icon"><i class="bi bi-calendar-check"></i></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-tile d-flex justify-content-between align-items-center">
+            <div><div class="stat-value">@(Model.AllInvoices?.Count ?? 0)</div><div class="stat-label">Hóa đơn</div></div>
+            <div class="stat-icon"><i class="bi bi-receipt"></i></div>
+        </div>
+    </div>
+</div>
+
+<div class="panel-card p-4 text-center">
+    <i class="bi bi-bar-chart-line fs-2 text-primary"></i>
+    <p class="mb-0 mt-2 text-muted">Tổng quan dữ liệu hệ thống. Chọn chức năng bên trên để xem chi tiết.</p>
+</div>

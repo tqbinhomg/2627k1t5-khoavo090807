@@ -702,11 +702,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\monhoc\\nosql\\bt_nhom_tuan2\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan2\\StudentManagement.Api\\StudentManagement.Api.csproj",
+      "projectUniqueName": "E:\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan2\\StudentManagement.Api\\StudentManagement.Api.csproj",
       "projectName": "StudentManagement.Api",
-      "projectPath": "E:\\monhoc\\nosql\\bt_nhom_tuan2\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan2\\StudentManagement.Api\\StudentManagement.Api.csproj",
+      "projectPath": "E:\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan2\\StudentManagement.Api\\StudentManagement.Api.csproj",
       "packagesPath": "C:\\Users\\as\\.nuget\\packages\\",
-      "outputPath": "E:\\monhoc\\nosql\\bt_nhom_tuan2\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan2\\StudentManagement.Api\\obj\\",
+      "outputPath": "E:\\2627k1t5-khoavo090807\\bt_nhom\\bt_nhom_tuan2\\StudentManagement.Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

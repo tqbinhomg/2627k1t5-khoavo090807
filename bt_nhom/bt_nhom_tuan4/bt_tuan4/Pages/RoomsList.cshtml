@@ -1,0 +1,245 @@
+@page
+@model bt_tuan4.Pages.RoomsListModel
+@{
+    ViewData["Title"] = "Quản lý phòng";
+}
+
+<div class="page-head mb-3">
+    <h1>Quản lý phòng</h1>
+    <p class="text-muted mb-0">Xem, thêm, sửa, xóa thông tin phòng.</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle me-1"></i>@Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle me-1"></i>@Model.SuccessMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="search-card p-3 p-md-4 mb-4">
+    <form method="post" asp-page-handler="Search">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-8">
+                <label class="form-label">Mã khách sạn</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                    <input type="text" name="hotelId" class="form-control" value="@Model.HotelId" placeholder="VD: HTL001">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-brand w-100"><i class="bi bi-search me-1"></i>Xem danh sách</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Model.Rooms != null && Model.Rooms.Count > 0)
+{
+    <div class="panel-card mb-4 border-primary">
+        <div class="px-4 py-3 border-bottom bg-white d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0 text-primary"><i class="bi bi-search me-2"></i>Phòng của khách sạn <code>@Model.HotelId</code></h2>
+            <span class="badge text-bg-primary">@Model.Rooms.Count phòng</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead><tr><th>Số phòng</th><th>Loại</th><th class="text-end">Giá/đêm</th><th class="text-center">Trạng thái</th><th class="text-center">Thao tác</th></tr></thead>
+                <tbody>
+                    @foreach (var room in Model.Rooms)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@room.RoomNumber</td>
+                            <td><span class="badge text-bg-light border">@room.RoomType</span></td>
+                            <td class="text-end">@room.PricePerNight.ToString("N0")</td>
+                            <td class="text-center">
+                                @switch (room.Status)
+                                {
+                                    case "AVAILABLE": <span class="badge text-bg-success">Có sẵn</span> break;
+                                    case "OCCUPIED": <span class="badge text-bg-danger">Đã đặt</span> break;
+                                    default: <span class="badge text-bg-warning">Bảo trì</span> break;
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="openEdit(@System.Text.Json.JsonSerializer.Serialize(room))"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('@room.HotelId', @room.RoomNumber)"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<div class="panel-card mb-4">
+    <div class="px-4 py-3 border-bottom bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h2 class="h5 mb-0"><i class="bi bi-door-closed me-2"></i>Tất cả phòng</h2>
+        <div class="d-flex gap-2 align-items-center">
+            <span class="badge text-bg-light border">@(Model.AllRooms?.Count ?? 0) phòng</span>
+            <button class="btn btn-sm btn-success" onclick="openAdd()"><i class="bi bi-plus-lg me-1"></i>Thêm mới</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead><tr><th>Khách sạn</th><th>Số phòng</th><th>Loại</th><th class="text-end">Giá/đêm</th><th class="text-center">Trạng thái</th><th class="text-center">Thao tác</th></tr></thead>
+            <tbody>
+                @if (Model.AllRooms != null && Model.AllRooms.Count > 0)
+                {
+                    @foreach (var room in Model.AllRooms)
+                    {
+                        <tr>
+                            <td><code>@room.HotelId</code></td>
+                            <td>@room.RoomNumber</td>
+                            <td><span class="badge text-bg-light border">@room.RoomType</span></td>
+                            <td class="text-end">@room.PricePerNight.ToString("N0")</td>
+                            <td class="text-center">
+                                @switch (room.Status)
+                                {
+                                    case "AVAILABLE": <span class="badge text-bg-success">Có sẵn</span> break;
+                                    case "OCCUPIED": <span class="badge text-bg-danger">Đã đặt</span> break;
+                                    default: <span class="badge text-bg-warning">Bảo trì</span> break;
+                                }
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="openEdit(@System.Text.Json.JsonSerializer.Serialize(room))"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('@room.HotelId', @room.RoomNumber)"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">Chưa có dữ liệu.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Thêm/Sửa -->
+<div class="modal fade" id="roomModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form method="post" asp-page-handler="Save">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roomModalTitle">Thêm phòng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage) && Model.ActiveModal == "roomModal")
+                    {
+                        <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>@Model.ErrorMessage</div>
+                    }
+                    <input type="hidden" name="IsEditing" id="isRoomEditing" value="@Model.IsEditing.ToString().ToLowerInvariant()">
+                    <input type="hidden" name="OriginalHotelId" id="originalRoomHotelId" value="@Model.OriginalHotelId">
+                    <input type="hidden" name="OriginalRoomNumber" id="originalRoomNumber" value="@Model.OriginalRoomNumber">
+                    <div class="mb-3">
+                        <label class="form-label">Mã khách sạn <span class="text-danger">*</span></label>
+                        <input type="text" name="FormRoom.HotelId" id="fHotelId" class="form-control" value="@Model.FormRoom.HotelId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Số phòng <span class="text-danger">*</span></label>
+                        <input type="number" name="FormRoom.RoomNumber" id="fRoomNumber" class="form-control" value="@Model.FormRoom.RoomNumber" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Loại phòng</label>
+                        <input type="text" name="FormRoom.RoomType" id="fRoomType" class="form-control" value="@Model.FormRoom.RoomType" placeholder="SINGLE, DOUBLE, SUITE...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Giá/đêm</label>
+                        <input type="number" name="FormRoom.PricePerNight" id="fPrice" class="form-control" value="@Model.FormRoom.PricePerNight" step="0.01">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select name="FormRoom.Status" id="fStatus" class="form-select">
+                            <option value="AVAILABLE" selected="@(Model.FormRoom.Status == "AVAILABLE" ? "selected" : null)">Có sẵn</option>
+                            <option value="OCCUPIED" selected="@(Model.FormRoom.Status == "OCCUPIED" ? "selected" : null)">Đã đặt</option>
+                            <option value="MAINTENANCE" selected="@(Model.FormRoom.Status == "MAINTENANCE" ? "selected" : null)">Bảo trì</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <form method="post" asp-page-handler="Delete">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Xóa phòng <strong id="deleteRoomInfo"></strong>?
+                    <input type="hidden" name="hotelId" id="deleteHotelId">
+                    <input type="hidden" name="roomNumber" id="deleteRoomNumber">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function openAdd() {
+    document.getElementById('roomModalTitle').textContent = 'Thêm phòng';
+    document.getElementById('isRoomEditing').value = 'false';
+    document.getElementById('originalRoomHotelId').value = '';
+    document.getElementById('originalRoomNumber').value = '';
+    ['fHotelId','fRoomNumber','fRoomType','fPrice'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fHotelId').readOnly = false;
+    document.getElementById('fRoomNumber').readOnly = false;
+    document.getElementById('fStatus').value = 'AVAILABLE';
+    new bootstrap.Modal(document.getElementById('roomModal')).show();
+}
+function openEdit(r) {
+    document.getElementById('roomModalTitle').textContent = 'Sửa phòng';
+    document.getElementById('isRoomEditing').value = 'true';
+    document.getElementById('originalRoomHotelId').value = r.HotelId;
+    document.getElementById('originalRoomNumber').value = r.RoomNumber;
+    document.getElementById('fHotelId').value = r.HotelId; document.getElementById('fHotelId').readOnly = false;
+    document.getElementById('fRoomNumber').value = r.RoomNumber; document.getElementById('fRoomNumber').readOnly = false;
+    document.getElementById('fRoomType').value = r.RoomType;
+    document.getElementById('fPrice').value = r.PricePerNight;
+    document.getElementById('fStatus').value = r.Status;
+    new bootstrap.Modal(document.getElementById('roomModal')).show();
+}
+function confirmDelete(hotelId, roomNumber) {
+    document.getElementById('deleteHotelId').value = hotelId;
+    document.getElementById('deleteRoomNumber').value = roomNumber;
+    document.getElementById('deleteRoomInfo').textContent = roomNumber + ' (' + hotelId + ')';
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+@if (Model.ActiveModal == "roomModal")
+{
+<text>
+document.getElementById('roomModalTitle').textContent = '@(Model.IsEditing ? "Sửa phòng" : "Thêm phòng")';
+document.getElementById('fHotelId').readOnly = false;
+document.getElementById('fRoomNumber').readOnly = false;
+new bootstrap.Modal(document.getElementById('roomModal')).show();
+</text>
+}
+</script>
+}

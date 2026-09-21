@@ -1,0 +1,251 @@
+@page
+@model bt_tuan4.Pages.InvoiceLookupModel
+@{
+    ViewData["Title"] = "Quản lý hóa đơn";
+}
+
+<div class="page-head mb-3">
+    <h1>Quản lý hóa đơn</h1>
+    <p class="text-muted mb-0">Xem, thêm, sửa, xóa hóa đơn.</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle me-1"></i>@Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="bi bi-check-circle me-1"></i>@Model.SuccessMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+<div class="search-card p-3 p-md-4 mb-4">
+    <form method="post" asp-page-handler="Search">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-8">
+                <label class="form-label">Mã đặt phòng (UUID)</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-receipt"></i></span>
+                    <input type="text" name="bookingIdInput" class="form-control" value="@Model.BookingIdInput" placeholder="UUID đặt phòng">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-brand w-100"><i class="bi bi-search me-1"></i>Tra cứu</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (Model.Invoice != null)
+{
+    <div class="panel-card overflow-hidden mb-4 border-primary">
+        <div class="px-4 py-3 border-bottom bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h2 class="h5 mb-1 text-primary"><i class="bi bi-receipt me-2"></i>Hóa đơn tra cứu</h2>
+                <p class="small text-muted mb-0">Phát hành: @Model.Invoice.IssuedAt.ToString("dd/MM/yyyy HH:mm")</p>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <span class="badge text-bg-primary">@Model.Invoice.InvoiceId.ToString()[..8].ToUpper()</span>
+                <button class="btn btn-sm btn-outline-secondary" onclick="openEdit(@System.Text.Json.JsonSerializer.Serialize(Model.Invoice))"><i class="bi bi-pencil me-1"></i>Sửa</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('@Model.Invoice.BookingId')"><i class="bi bi-trash me-1"></i>Xóa</button>
+            </div>
+        </div>
+        <div class="p-4">
+            <div class="row g-3 mb-4 info-grid">
+                <div class="col-md-6"><div class="info-label">Mã đặt phòng</div><div class="info-value"><code>@Model.Invoice.BookingId</code></div></div>
+                <div class="col-md-6"><div class="info-label">Khách hàng</div><div class="info-value"><code>@Model.Invoice.GuestId</code></div></div>
+                <div class="col-md-6"><div class="info-label">Khách sạn</div><div class="info-value"><code>@Model.Invoice.HotelId</code></div></div>
+                <div class="col-md-6"><div class="info-label">Phí phòng</div><div class="info-value">@Model.Invoice.RoomCharge.ToString("N0")</div></div>
+                <div class="col-md-6"><div class="info-label">Phí dịch vụ</div><div class="info-value">@Model.Invoice.ServiceCharge.ToString("N0")</div></div>
+                <div class="col-md-6"><div class="info-label">Thuế</div><div class="info-value">@Model.Invoice.Tax.ToString("N0")</div></div>
+            </div>
+            <div class="invoice-total d-flex justify-content-between align-items-center mb-3">
+                <span class="fw-semibold">Tổng thanh toán</span>
+                <span class="h5 mb-0 text-success">@Model.Invoice.TotalAmount.ToString("N0")</span>
+            </div>
+            @PaymentBadge(Model.Invoice.PaymentStatus)
+        </div>
+    </div>
+}
+
+<div class="panel-card mb-4">
+    <div class="px-4 py-3 border-bottom bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h2 class="h5 mb-0"><i class="bi bi-receipt me-2"></i>Tất cả hóa đơn</h2>
+        <div class="d-flex gap-2 align-items-center">
+            <span class="badge text-bg-light border">@(Model.AllInvoices?.Count ?? 0) hóa đơn</span>
+            <button class="btn btn-sm btn-success" onclick="openAdd()"><i class="bi bi-plus-lg me-1"></i>Thêm mới</button>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr><th>Mã đặt phòng</th><th>Khách hàng</th><th>Khách sạn</th><th class="text-end">Phí phòng</th><th class="text-end">Phí DV</th><th class="text-end">Thuế</th><th class="text-end">Tổng</th><th class="text-center">Trạng thái</th><th>Ngày PH</th><th class="text-center">Thao tác</th></tr>
+            </thead>
+            <tbody>
+                @if (Model.AllInvoices != null && Model.AllInvoices.Count > 0)
+                {
+                    @foreach (var inv in Model.AllInvoices)
+                    {
+                        <tr>
+                            <td><code>@inv.BookingId.ToString()[..8].ToUpper()</code></td>
+                            <td><code>@inv.GuestId</code></td>
+                            <td><code>@inv.HotelId</code></td>
+                            <td class="text-end">@inv.RoomCharge.ToString("N0")</td>
+                            <td class="text-end">@inv.ServiceCharge.ToString("N0")</td>
+                            <td class="text-end">@inv.Tax.ToString("N0")</td>
+                            <td class="text-end fw-semibold">@inv.TotalAmount.ToString("N0")</td>
+                            <td class="text-center">@PaymentBadge(inv.PaymentStatus)</td>
+                            <td>@inv.IssuedAt.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center">
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="openEdit(@System.Text.Json.JsonSerializer.Serialize(inv))"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('@inv.BookingId')"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="10" class="text-center text-muted py-4">Chưa có dữ liệu.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@functions {
+    IHtmlContent PaymentBadge(string status) => status switch {
+        "PAID" => new HtmlString("<span class='badge text-bg-success'>Đã thanh toán</span>"),
+        "UNPAID" => new HtmlString("<span class='badge text-bg-warning'>Chưa thanh toán</span>"),
+        "REFUNDED" => new HtmlString("<span class='badge text-bg-info'>Đã hoàn tiền</span>"),
+        _ => new HtmlString($"<span class='badge text-bg-secondary'>{status}</span>")
+    };
+}
+
+<!-- Modal Thêm/Sửa -->
+<div class="modal fade" id="invoiceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form method="post" asp-page-handler="Save">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="invoiceModalTitle">Thêm hóa đơn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage) && Model.ActiveModal == "invoiceModal")
+                    {
+                        <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-1"></i>@Model.ErrorMessage</div>
+                    }
+                    <input type="hidden" name="FormInvoice.BookingId" id="fBookingId" value="@Model.FormInvoice.BookingId">
+                    <input type="hidden" name="FormInvoice.InvoiceId" id="fInvoiceId" value="@Model.FormInvoice.InvoiceId">
+                    <input type="hidden" name="FormInvoice.IssuedAt" id="fIssuedAt" value="@(Model.FormInvoice.IssuedAt == default ? "" : Model.FormInvoice.IssuedAt.ToString("O"))">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Mã đặt phòng (UUID)</label>
+                            <input type="text" id="fBookingIdVis" class="form-control" value="@(Model.FormInvoice.BookingId == Guid.Empty ? "" : Model.FormInvoice.BookingId.ToString())" placeholder="Để trống = tự tạo" oninput="document.getElementById('fBookingId').value=this.value">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mã khách hàng</label>
+                            <input type="text" name="FormInvoice.GuestId" id="fGuestId" class="form-control" value="@Model.FormInvoice.GuestId">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mã khách sạn</label>
+                            <input type="text" name="FormInvoice.HotelId" id="fHotelId" class="form-control" value="@Model.FormInvoice.HotelId">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phí phòng</label>
+                            <input type="number" name="FormInvoice.RoomCharge" id="fRoomCharge" class="form-control" value="@Model.FormInvoice.RoomCharge" step="0.01">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phí dịch vụ</label>
+                            <input type="number" name="FormInvoice.ServiceCharge" id="fServiceCharge" class="form-control" value="@Model.FormInvoice.ServiceCharge" step="0.01">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Thuế</label>
+                            <input type="number" name="FormInvoice.Tax" id="fTax" class="form-control" value="@Model.FormInvoice.Tax" step="0.01">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tổng tiền</label>
+                            <input type="number" name="FormInvoice.TotalAmount" id="fTotal" class="form-control" value="@Model.FormInvoice.TotalAmount" step="0.01">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Trạng thái thanh toán</label>
+                            <select name="FormInvoice.PaymentStatus" id="fPayStatus" class="form-select">
+                                <option value="UNPAID" selected="@(Model.FormInvoice.PaymentStatus == "UNPAID" ? "selected" : null)">Chưa thanh toán</option>
+                                <option value="PAID" selected="@(Model.FormInvoice.PaymentStatus == "PAID" ? "selected" : null)">Đã thanh toán</option>
+                                <option value="REFUNDED" selected="@(Model.FormInvoice.PaymentStatus == "REFUNDED" ? "selected" : null)">Đã hoàn tiền</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Xóa -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <form method="post" asp-page-handler="Delete">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận xóa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Xóa hóa đơn này?
+                    <input type="hidden" name="bookingId" id="dBookingId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+function openAdd() {
+    document.getElementById('invoiceModalTitle').textContent = 'Thêm hóa đơn';
+    ['fBookingId','fInvoiceId','fIssuedAt','fBookingIdVis','fGuestId','fHotelId','fRoomCharge','fServiceCharge','fTax','fTotal'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fBookingIdVis').readOnly = false;
+    document.getElementById('fPayStatus').value = 'UNPAID';
+    new bootstrap.Modal(document.getElementById('invoiceModal')).show();
+}
+function openEdit(inv) {
+    document.getElementById('invoiceModalTitle').textContent = 'Sửa hóa đơn';
+    document.getElementById('fBookingId').value = inv.BookingId;
+    document.getElementById('fInvoiceId').value = inv.InvoiceId;
+    document.getElementById('fIssuedAt').value = inv.IssuedAt;
+    document.getElementById('fBookingIdVis').value = inv.BookingId; document.getElementById('fBookingIdVis').readOnly = false;
+    document.getElementById('fGuestId').value = inv.GuestId;
+    document.getElementById('fHotelId').value = inv.HotelId;
+    document.getElementById('fRoomCharge').value = inv.RoomCharge;
+    document.getElementById('fServiceCharge').value = inv.ServiceCharge;
+    document.getElementById('fTax').value = inv.Tax;
+    document.getElementById('fTotal').value = inv.TotalAmount;
+    document.getElementById('fPayStatus').value = inv.PaymentStatus;
+    new bootstrap.Modal(document.getElementById('invoiceModal')).show();
+}
+function confirmDelete(bookingId) {
+    document.getElementById('dBookingId').value = bookingId;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+@if (Model.ActiveModal == "invoiceModal")
+{
+<text>new bootstrap.Modal(document.getElementById('invoiceModal')).show();</text>
+}
+</script>
+}
